@@ -1,7 +1,10 @@
-import '../styles/globals.css'
+import '../styles/globals.css';
+import useSupabase from '../lib/useSupabase';
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  const { session, supabase } = useSupabase();
+
+  return <Component {...pageProps} supabase={supabase} session={session} />;
 }
 
-export default MyApp
+export default MyApp;
