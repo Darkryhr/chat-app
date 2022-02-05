@@ -41,7 +41,6 @@ const Chat = () => {
     }
   }, []);
 
-  console.log(currentUser);
   if (!currentUser) return <h1>Loading...</h1>;
 
   return (
