@@ -3,9 +3,18 @@ import Dashboard from '../components/Dashboard';
 import Topbar from '../components/Topbar';
 import { Message } from '../components/Message';
 import Typebar from '../components/Typebar';
+import useSupabase from '../lib/useSupabase';
+import { AnimatePresence } from 'framer-motion';
+import Modal from '../components/Modal';
 
-const Chat = ({ supabase }) => {
+const Chat = () => {
   const [messages, setMessages] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const { supabase, currentUser } = useSupabase();
+
+  const close = () => setModalOpen(false);
+  const open = () => setModalOpen(true);
+
   useEffect(() => {
     const getMessages = async () => {
       let { data: messages, error } = await supabase
@@ -26,7 +35,15 @@ const Chat = ({ supabase }) => {
     };
 
     setupMessageSubscription();
+
+    if (currentUser && !currentUser.username) {
+      setModalOpen(true);
+    }
   }, []);
+
+  console.log(currentUser);
+  if (!currentUser) return <h1>Loading...</h1>;
+
   return (
     <div className='flex text-white h-screen'>
       <Dashboard />
@@ -44,6 +61,13 @@ const Chat = ({ supabase }) => {
         ))}
         <Typebar />
       </div>
+      <AnimatePresence
+        initial={false}
+        exitBeforeEnter={true}
+        onExitComplete={() => null}
+      >
+        {modalOpen && <Modal modalOpen={modalOpen} handleClose={close} />}
+      </AnimatePresence>
     </div>
   );
 };
