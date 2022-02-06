@@ -6,12 +6,14 @@ import Typebar from '../components/Typebar';
 import useSupabase from '../lib/useSupabase';
 import { AnimatePresence } from 'framer-motion';
 import Modal from '../components/Modal';
+import Settings from './Settings';
+import Username from './Username';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const { supabase, currentUser } = useSupabase();
-
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const close = () => setModalOpen(false);
   const open = () => setModalOpen(true);
 
@@ -35,16 +37,17 @@ const Chat = () => {
     };
 
     setupMessageSubscription();
-
-    if (currentUser && !currentUser.username) {
-      setModalOpen(true);
-    }
   }, []);
 
-  if (!currentUser) return <h1>Loading...</h1>;
+  if (!currentUser)
+    return (
+      <div className='flex justify-center items-center w-full h-screen bg-charcoal-500'>
+        <h1 className='font-3xl text-white font-bold'>Loading...</h1>
+      </div>
+    );
 
   return (
-    <div className='flex text-white h-screen'>
+    <div className='flex text-white h-screen relative'>
       <Dashboard />
       <div className='bg-charcoal-500 flex-1 flex flex-col'>
         <Topbar />
